@@ -96,7 +96,7 @@ const createTier = (label = "Change me") => {
 
   const tier = document.createElement("div");
   tier.className = "tier";
-  tier.innerHTML = `
+  tier.innerHTML = ` 
   <div class="label" contenteditable="plaintext-only" style="--color: ${tierColor}">
     <span>${label}</span>
   </div>
@@ -152,25 +152,28 @@ const handleImageUpload = () => {
   const fileInput = document.createElement("input");
   fileInput.type = "file";
   fileInput.accept = "image/*";
+  fileInput.multiple = true;  // Allow multiple file selection
 
   fileInput.addEventListener("change", (event) => {
-    const file = event.target.files[0];
+    const files = event.target.files;
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = document.createElement("img");
-        img.src = e.target.result; // Set the image source
-        img.draggable = true;
+    if (files.length > 0) {
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.createElement("img");
+          img.src = e.target.result; // Set the image source
+          img.draggable = true;
 
-        img.addEventListener("dragstart", () => img.classList.add("dragging"));
-        img.addEventListener("dragend", () => img.classList.remove("dragging"));
+          img.addEventListener("dragstart", () => img.classList.add("dragging"));
+          img.addEventListener("dragend", () => img.classList.remove("dragging"));
 
-        // Append the new image to the cards container
-        cardsContainer.appendChild(img);
-      };
+          // Append the new image to the cards container
+          cardsContainer.appendChild(img);
+        };
 
-      reader.readAsDataURL(file); // Read the image file as a data URL
+        reader.readAsDataURL(file); // Read the image file as a data URL
+      });
     }
   });
 
